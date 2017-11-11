@@ -31,5 +31,10 @@ SOCIAL = (('You can add links in your config file', '#'),
 
 DEFAULT_PAGINATION = 10
 
+THEME = './theme/'
+PLUGIN_PATHS = ["./plugins"]
+PLUGINS = ["render_math", "pelican_javascript"]
+
+
 # Uncomment following line if you want document-relative URLs when developing
-#RELATIVE_URLS = True
+RELATIVE_URLS = True
