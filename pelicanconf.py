@@ -33,7 +33,7 @@ DEFAULT_PAGINATION = 10
 
 THEME = './theme/'
 PLUGIN_PATHS = ["./plugins"]
-PLUGINS = ["render_math", "pelican_javascript"]
+PLUGINS = ["render_math", "pelican_javascript", "liquid_tags.video"]
 
 
 # Uncomment following line if you want document-relative URLs when developing
