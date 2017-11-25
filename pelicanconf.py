@@ -38,3 +38,5 @@ PLUGINS = ["render_math", "pelican_javascript", "liquid_tags.video"]
 
 # Uncomment following line if you want document-relative URLs when developing
 RELATIVE_URLS = True
+
+GOOGLE_ANALYTICS = 'UA-10507665-2'
