@@ -49,17 +49,10 @@
         {% include '_includes/feeds.html' %}
         {% endblock feed_links %}
         {% include '_includes/analytics.html' %}
-        {% if article %}
-        {% if article.stylesheets %}
-        {% for stylesheet in article.stylesheets %}
-        {{ stylesheet }}
-        {% endfor %}
-        {% endif %}
-        {% endif %}
     </head>
     <body>
         <div id="content-sans-footer">
-        <div class="navbar navbar-static-top">
+        <div class="navbar navbar-static-top navbar-fixed-top">
             <div class="navbar-inner">
                 <div class="container-fluid">
                     <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -110,13 +103,6 @@
         {% endblock script %}
         {% include '_includes/stat_counter.html' %}
     </body>
-    {% if article %}
-    {% if article.javascripts %}
-    {% for javascript in article.javascripts %}
-    {{ javascript }}
-    {% endfor %}
-    {% endif %}
-    {% endif %}
     <!-- Theme: Elegant built for Pelican
     License : http://oncrashreboot.com/pelican-elegant -->
 </html>

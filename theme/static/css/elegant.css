@@ -3,6 +3,7 @@
 body,
 html {
     height: 100%;
+    padding-top: 70px;
 }
 #content-sans-footer {
     min-height: 100%;
@@ -30,7 +31,7 @@ h6 small, h6 a, h6 a:hover {
     text-decoration: none;
 }
 a {
-    color: #3875d7;
+    color: #000000;
 }
 hr {
     border-width: 3px;

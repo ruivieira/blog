@@ -2,7 +2,7 @@
 ##
 # This section should match your Makefile
 ##
-PY=${PY:-python}
+PY=/usr/local/Cellar/python/2.7.13_1/bin/python2
 PELICAN=${PELICAN:-pelican}
 PELICANOPTS=
 
