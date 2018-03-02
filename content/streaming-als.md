@@ -2,11 +2,9 @@ Title: A streaming ALS implementation
 Date: 2017-12-18 12:36
 
 
-In this blog post I would to talk a little bit about recommendation engines in general and how to build a streaming 
-recommendation engine on top of [Apache Spark](https://spark.apache.org/).
+In this blog post I would like to talk a little bit about recommendation engines in general and how to build a streaming recommendation engine on top of [Apache Spark](https://spark.apache.org/).
 
-I will start by introducing the concept of [collaborative filtering](#collab), and focus in two variants: [batch](#batch_als) and [streaming](#streaming_als) Alternating Least Squares (ALS). I will look at the principles of a streaming distributed recommendation engine on Spark and finally, I’ll 
-talk about practical issues when using these methods.
+I will start by introducing the concept of [collaborative filtering](#collab), and focus in two variants: [batch](#batch_als) and [streaming](#streaming_als) Alternating Least Squares (ALS). I will look at the principles of a streaming distributed recommendation engine on Spark and finally, I’ll talk about practical issues when using these methods.
 
 ## Recommendation engines
 
@@ -16,20 +14,18 @@ Recommendation engines are a popular method to match *users*, *products* and his
 
 ## Collaborative filtering <a name="collab"></a>                                            
 
-In the majority of cases, we assume there’s a unique mapping between a _user_ $x$, a _product_ $y$ and _rating_ $R_{x,y}$.
+In the majority of cases, we assume there’s a unique mapping between a _user_ $x$, a _product_ $y$ and _rating_ $\mathsf{R}_{x,y}$.
 
 $$
-\left(x,y\right) \mapsto R_{x,y}
+\left(x,y\right) \mapsto \mathsf{R}_{x,y}
 $$
 
 The “collaborative” aspect refers to the fact that we are using collective information from a group of users and “filtering” is simply a synonym for “prediction”.
 
 So, we use collaborative filtering quite frequently in our daily life and it really seems like common sense.
 
-The main principle is that if a group of people tend to collectively have similar tastes, it is more likely that 
-they agree on an unknown product.
-Let’s imagine that you have a number of friends with whom you share a very similar musical taste, let’s call it 
-`A` and another group, `B`, compared to which you have very different musical tastes. 
+The main principle is that if a group of people tend to collectively have similar tastes, it is more likely that they agree on an unknown product.
+Let’s imagine that you have a number of friends with whom you share a very similar musical taste, let’s call it `A` and another group, `B`, compared to which you have very different musical tastes. 
 If group `A` and group `B` both recommend you a new album which they regard highly, which one would you pick?
 
 You will probably pick the album from group `A`, right? So that’s collaborative filtering in a nutshell.
@@ -43,26 +39,23 @@ Because `B` is too dissimilar, a low rating is not very informative.
 
 ## Alternating Least Squares (ALS)
 
-One of the most popular collaborative filtering methods is _Alternating Least Squares_ (ALS) **(ref)**.
-In ALS we assume that the available rating data can be represented in a sparse matrix form, that is we will assume a sequential ordering of both users and products.
-Each entry of the matrix, will then represent the rating for a unique pair of user and products.
+One of the most popular collaborative filtering methods is [_Alternating Least Squares_](https://link.springer.com/chapter/10.1007/978-3-540-68880-8_32) (ALS)
+In ALS we assume that the available rating data can be represented in a sparse matrix form, that is, we will assume a sequential ordering of both users and products. Each entry of the matrix will then represent the rating for a unique pair of user and products.
 
-If we then consider ratings data as a matrix, let's call it $R$, the _user_ and _product_ ids will represent coordinates in
-a ratings matrix and the actual rating will be the value for that
-particular entry. To keep the notation consistent with the above we simply call the entry $(x,y)$ as $R_{x,y}$. This will look something like represented in the figure below.
+If we then consider ratings data as a matrix, let's call it $\mathsf{R}$, the _user_ and _product_ ids will represent coordinates in a ratings matrix and the actual rating will be the value for that particular entry. To keep the notation consistent with the above we simply call the entry $(x,y)$ as $\mathsf{R}_{x,y}$. This will look something like the matrix represented in the figure below.
 
 ![Data <>](images/als/ratings_table.png)
 
-The idea behind ALS is to factorise the ratings matrix $R_{x,y}$  into two matrices $U$ and $P$, which in turn, when multiplied back will return an approximation of the original ratings matrix, that is:
+The idea behind ALS is to factorise the ratings matrix $\mathsf{R}_{x,y}$  into two matrices $\mathsf{U}$ and $\mathsf{P}$, which in turn, when multiplied back, will return an approximation of the original ratings matrix, that is:
 
 $$
-R \approx \hat{R} = U^T P
+\mathsf{R} \approx \hat{\mathsf{R}} = \mathsf{U}^T \mathsf{P}
 $$
 
-To “predict” a missing rating for a user $x$ and product $y$, we can simply multiply two vectors, namely the $x$ row from the user latent factors and the $y$ column from the product latent factors, $\hat{R}_{x,y}$, that is:
+To “predict” a missing rating for a user $x$ and product $y$, we can simply multiply two vectors, namely the $x$ row from the user latent factors and the $y$ column from the product latent factors, $\hat{\mathsf{R}}_{x,y}$, that is:
 
 $$
-\hat{R}_{x,y} = U_x^T P_y
+\hat{\mathsf{R}}_{x,y} = \mathsf{U}_x^T \mathsf{P}_y
 $$
 
 There are several ways to tackle this factorisation problem and we will cover two of them in here. We will first look at a [batch method](#batch_als), which aims at factorising using the whole of the ratings matrix and a [stochastic gradient descent method](#streaming_als), which uses a single observation at a time.
@@ -70,14 +63,14 @@ There are several ways to tackle this factorisation problem and we will cover tw
 ### Batch ALS <a name="batch_als"></a>
 
 This factorisation is performed by first defining an (objective) loss function (here called $\ell$). 
-A general form is represented below where, as before, $R_{x,y}$ is the _true rating_ and $\hat{R}_{x,y}$ is the 
+A general form is represented below where, as before, $\mathsf{R}_{x,y}$ is the _true rating_ and $\hat{\mathsf{R}}_{x,y}$ is the 
 _predicted rating_, calculated as seen previously. The remaining terms are simply regularisation terms to help prevent overfitting.
 
 $$
-\ell = \sum c_{x,y} \left(R_{x,y} - \underbrace{U_x^T P_y}_{\hat{R}_{x,t}}\right)^2 + \lambda\left(\left\lVert U \right\rVert^2 +  \left\lVert P \right\rVert^2\right)
+\ell = \sum c_{x,y} \left(\mathsf{R}_{x,y} - \underbrace{\mathsf{U}_x^T \mathsf{P}_y}_{\hat{\mathsf{R}}_{x,t}}\right)^2 + \lambda\left(\left\lVert \mathsf{U} \right\rVert^2 +  \left\lVert \mathsf{P} \right\rVert^2\right)
 $$
 
-The value of $c_{x,y}$ constitutes a penalisation function and will depend on whether we are considering _explicif_ or _implicit_ feedback. If we consider the _known_ ratings as our training dataset $\mathcal{T}$, then, in the case of explicit feedback we have
+The value of $c_{x,y}$ constitutes a penalisation function and will depend on whether we are considering _explicit_ or _implicit_ feedback. If we consider the _known_ ratings as our training dataset $\mathcal{T}$, then, in the case of explicit feedback we have
 
 $$
 c_{x,y} = \begin{cases}
@@ -88,16 +81,16 @@ $$
 
 Constraining our loss function to only include known ratings. The implicit feedback case is different (and a possible future topic) and for the remainder of this post we will only consider the explicit feedback case. Given the above, we can then simplify our loss function, in the explicit feedback case, to
 $$
-\ell = \sum_{x,y \in \mathcal{T}} \left(R_{x,y} -\hat{R}_{x,y}\right)^2 + \lambda\left(\left\lVert U \right\rVert^2 +  \left\lVert P \right\rVert^2\right)
+\ell = \sum_{x,y \in \mathcal{T}} \left(\mathsf{R}_{x,y} -\hat{\mathsf{R}}_{x,y}\right)^2 + \lambda\left(\left\lVert \mathsf{U} \right\rVert^2 +  \left\lVert \mathsf{P} \right\rVert^2\right)
 $$
-Minimizing $\ell$ is however an NP-hard problem, due its nonconvexity. However, if we treat $U$ as constant, then $\ell$ is a convex in relation to $P$ and if we treat $P$ as constant, $\ell$ is convex in relation to $U$. We can then alternate between fixing $U$ and $P$, changing the values such that the loss function $\ell$ (above) is minimized. This procedure is then repeated until we reach convergence.
+Minimizing $\ell$ is however an NP-hard problem, due to its nonconvexity. However, if we treat $\mathsf{U}$ as constant, then $\ell$ is a convex in relation to $\mathsf{P}$ and if we treat $\mathsf{P}$ as constant, $\ell$ is convex in relation to $\mathsf{U}$. We can then alternate between fixing $\mathsf{U}$ and $\mathsf{P}$, changing the values such that the loss function $\ell$ (above) is minimized. This procedure is then repeated until we reach convergence.
 
 
-The way that ALS works is, in simplified terms to find the factors $U$ and $P$, which when multiplied together provide an approximation of our ratings matrix $R$, as we've seen previously.
+The way that ALS works is, in simplified terms, to find the factors $\mathsf{U}$ and $\mathsf{P}$, which when multiplied together provide an approximation of our ratings matrix $\mathsf{R}$, as we've seen previously.
 
 ![Data <>](images/als/rupt.png)
 
-Once we have the factors $U$ and $P$ we can then predict the missing values in $R$ by using the approximation $\hat{R}$.
+Once we have the factors $\mathsf{U}$ and $\mathsf{P}$, we can then predict the missing values in $\mathsf{R}$ by using the approximation $\hat{\mathsf{R}}$.
 
 It is clear that in a real world scenario we would have *many* missing ratings, simply due to the assumption that no user rates all products (if they did, the case for a recommendation engine will be significantly weaker). ALS is designed to deal with sparse matrices and to fill the blanks using _predicted values_. After factorization, our approximated ratings matrix will look something like this:
 
@@ -106,36 +99,34 @@ It is clear that in a real world scenario we would have *many* missing ratings, 
 As mentioned previously, the first step is then to minimise the loss function.  In this case we take the partial derivatives and set them to zero and fortunately this has a closed form solution. We get a system of linear equations which we can easily implement. The system will correspond to the solution of
 
 $$
-\frac{\partial \ell}{\partial U_x}=0, \qquad \frac{\partial \ell}{\partial P_y}=0.
+\frac{\partial \ell}{\partial \mathsf{U}_x}=0, \qquad \frac{\partial \ell}{\partial \mathsf{P}_y}=0.
 $$
 
 We start by solving the user latent factor minimisation using:
 
 $$
-\frac{1}{2}\frac{\partial \ell}{\partial U_x}=0 \\
-\frac{1}{2}\frac{\partial}{\partial U_x} \sum_{x,y \in \mathcal{T}} \left(R_{x,y} - U_x^T P_y\right)^2 + \lambda\left(\left\lVert U \right\rVert^2 +  \left\lVert P \right\rVert^2\right)=0 \\
--\sum_{x,y \in \mathcal{T}} \left(R_{x,y} - U_x^T P_y\right)P_y^T + \lambda U_x^T=0\\
--\left(R_x - U_x^T P^T\right)P + \lambda U_x^T=0\\
-U_x^T\left(P^T P + \lambda I\right) = R_x P \\
-U_x^T = R_x P \left(P^T P + \lambda I\right)^{-1}.
+\frac{1}{2}\frac{\partial \ell}{\partial \mathsf{U}_x}=0 \\
+\frac{1}{2}\frac{\partial}{\partial \mathsf{U}_x} \sum_{x,y \in \mathcal{T}} \left(\mathsf{R}_{x,y} - \mathsf{U}_x^T \mathsf{P}_y\right)^2 + \lambda\left(\left\lVert \mathsf{U} \right\rVert^2 +  \left\lVert \mathsf{P} \right\rVert^2\right)=0 \\
+-\sum_{x,y \in \mathcal{T}} \left(\mathsf{R}_{x,y} - \mathsf{U}_x^T \mathsf{P}_y\right)\mathsf{P}_y^T + \lambda \mathsf{U}_x^T=0\\
+-\left(\mathsf{R}_x -\mathsf{U}_x^T \mathsf{P}^T\right)\mathsf{P} + \lambda \mathsf{U}_x^T=0\\
+\mathsf{U}_x^T\left(\mathsf{P}^T \mathsf{P} + \lambda \boldsymbol{\mathsf{I}}\right) = \mathsf{R}_x \mathsf{P} \\
+\mathsf{U}_x^T = \mathsf{R}_x \mathsf{P} \left(\mathsf{P}^T \mathsf{P} + \lambda \boldsymbol{\mathsf{I}}\right)^{-1}.
 $$
 
 Similarly, we can solve for the product latent factor by using:
 
 $$
-\frac{1}{2}\frac{\partial \ell}{\partial P_y}=0 \\
--\sum_{x,y \in \mathcal{T}} \left(R_{x,y} - P_y^T U_x\right)U_x^T + \lambda P_y^T=0\\
--\left(R_y - P_y^T U^T\right)U + \lambda P_y^T=0\\
-P_y^T\left(U^T U + \lambda I\right) = R_y U \\
-P_y^T = R_y U \left(U^T U + \lambda I\right)^{-1}.
+\frac{1}{2}\frac{\partial \ell}{\partial \mathsf{P}_y}=0 \\
+-\sum_{x,y \in \mathcal{T}} \left(\mathsf{R}_{x,y} - \mathsf{P}_y^T \mathsf{U}_x\right)\mathsf{U}_x^T + \lambda \mathsf{P}_y^T=0\\
+-\left(\mathsf{R}_y - \mathsf{P}_y^T \mathsf{U}^T\right)\mathsf{U} + \lambda \mathsf{P}_y^T=0\\
+\mathsf{P}_y^T\left(\mathsf{U}^T \mathsf{U} + \lambda \boldsymbol{\mathsf{I}}\right) = \mathsf{R}_y \mathsf{U} \\
+\mathsf{P}_y^T = \mathsf{R}_y \mathsf{U} \left(\mathsf{U}^T \mathsf{U} + \lambda \boldsymbol{\mathsf{I}}\right)^{-1}.
 $$
 
-We can then calculate each factor iteratively, by fixing the other one and solving the estimator. While this process is alternated, an error measure (usually the _Root Mean Squared Error_, or $RMSE$) is calculated (as below) between the rating matrix approximation given by the latent factors and the ratings which we have. This method is guaranteed to converge and when we consider out approximation to be good enough, 
-
-or after a set number of iterations we can then stop the refinement. 
+We can then calculate each factor iteratively, by fixing the other one and solving the estimator. While this process is alternated, an error measure (usually the _Root Mean Squared Error_, or $RMSE$) is calculated (as below) between the rating matrix approximation given by the latent factors and the ratings which we have, $\mathcal{T}$. This method is guaranteed to converge and when we consider out approximation to be good enough, or after a set number of iterations we can then stop the refinement. 
 
 $$
-RMSE = \sqrt{\frac{1}{n}\sum_{x,y \in \mathcal{T}}\lvert \hat{r}_{x,y} - r_{x,y}\rvert}
+RMSE = \sqrt{\frac{1}{n}\sum_{x,y \in \mathcal{T}}\lvert \hat{\mathsf{R}}_{x,y} - \mathsf{R}_{x,y}\rvert}
 $$
 
 After the latent factors are estimated, we can then use them to try to recreate the original ratings matrix 
@@ -151,7 +142,7 @@ I think you know where this is going ... we make up this final ratings matrix so
 
 ![Data <>](images/als/mona_lisa_pixelated_viridis.png)
 
-So how do we perform this factorisation? The initial step is to fill the latent factors ($U$ and $P$) with random values. Since at this point, we assume we don’t have any ratings, having random factors will lead to an initial random guess of the ratings matrix.
+So how do we perform this factorisation? The initial step is to fill the latent factors ($\mathsf{U}$ and $\mathsf{P}$) with random values. Since at this point, we assume we don’t have any ratings, having random factors will lead to an initial random guess of the ratings matrix.
 
 ![Data <>](images/als/initial.png)
 
@@ -164,11 +155,11 @@ This is to be expected, in this case, since this would be the simplest implement
 So a fair question that arises is: why can't we update this model and perform recommendations in a streaming fashion using this method? 
 After all, if users add product ratings, we can simply update the predictions by recalculating the factors!
 
-The problem is that when a new rating is added, or when new users and new products are added, we need to recalculate the entirety of the $U$ and $P$ matrices, and to do so, we need to have access to all of the data, $R$.
+The problem is that when a new rating is added, or when new users and new products are added, we need to recalculate the entirety of the $\mathsf{U}$ and $\mathsf{P}$ matrices, and to do so, we need to have access to all of the data, $\mathsf{R}$.
 
 ### Streaming ALS <a name="#streaming_als"></a>
 
-Ideally, we want a method that would allow us to update $U$ and $P$ using one observation, $R_{x,y}$ at a time.
+Ideally, we want a method that would allow us to update $\mathsf{U}$ and $\mathsf{P}$ using one observation, $\mathsf{R}_{x,y}$ at a time.
 
 It turns out that the _Stochastic Gradient Descent_ (or SGD) method allows us to do precisely that. We'll look at the specific variant of SGD we've used which is called _Bias-Stochastic Gradient Descent_ (B-SGD).
 
@@ -198,7 +189,7 @@ $$
 
 Since calculating the full gradient is computationally very expensive, we calculate it for a single observation. As we can see, the SGD method allows us to update the user and product specific bias as well as a single user and product latent factor row given a single rating.
 
-Provided we have a single rating, the rating of user $x$ for product $y$, we can update the biases as well as the latent vectors for user $x$ and for product $y$, that is, we no longer need to update the entire matrices $U$ and $P$, while still maintaining a convergence property.
+Provided we have a single rating, the rating of user $x$ for product $y$, we can update the biases as well as the latent vectors for user $x$ and for product $y$, that is, we no longer need to update the entire matrices $\mathsf{U}$ and $\mathsf{P}$, while still maintaining a convergence property.
 
 Provided with a learning rate $\gamma$ and defining our _prediction error_ as
 $$
@@ -251,7 +242,7 @@ val lambda: Double
 ```
 
  * An `RDD` containing the ratings. The `RDD` has elements of the class `Rating`, which is basically a wrapper around a tuple of user id, product id and rating. This RDD corresponds to all the entries in our ratings matrix used previously.
- * The `rank` which corresponds to the number of elements in our latent factor vectors (this would be the number of columns or rows in our $U$ and $P$ matrices).
+ * The `rank` which corresponds to the number of elements in our latent factor vectors (this would be the number of columns or rows in our $\mathsf{U}$ and $\mathsf{P}$ matrices).
  * A stopping criteria in terms of iterations for the ALS.
  * And finally, we set the `lambda` parameter, a regularisation parameter, which we’ve shown to be a part of the loss function’s regularisation.
 
