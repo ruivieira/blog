@@ -184,7 +184,7 @@ but we don’t need to go into that.
 
 
 $$
-\ell_{SGD} = \sum_{x,y \in \mathcal{T}} \left(\mathsf{R}_{x,y} - b_{x,y} - \hat{\mathsf{R}}_{x,y}\right) + \lambda\left(\left\lVert \mathsf{U} \right\rVert^2 +  \left\lVert \mathsf{P} \right\rVert^2 + b_x^2 + b_y^2\right)
+\ell_{SGD} = \sum_{x,y \in \mathcal{T}} \left(\mathsf{R}_{x,y} - b_{x,y} - \hat{\mathsf{R}}_{x,y}\right)^2 + \lambda\left(\left\lVert \mathsf{U} \right\rVert^2 +  \left\lVert \mathsf{P} \right\rVert^2 + b_x^2 + b_y^2\right)
 $$
 
 Since calculating the full gradient is computationally very expensive, we calculate it for a single observation. As we can see, the SGD method allows us to update the user and product specific bias as well as a single user and product latent factor row given a single rating.
