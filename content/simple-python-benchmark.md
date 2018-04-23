@@ -132,7 +132,7 @@ Profiling this code with `cProfile` gives the following results:
 The results look different than the original ones on account of being performed on a different machine. However, we will just look into the relative code performance between different implementations and whether the code itself has room for optimisation.
 
 Surprisingly, the console I/O took a much smaller proportion of the execution time than I expected (0.4%).
-On the other hand, as expected, the bulk of the execution time is spent on the `gammavariate` and `normal` methods.
+On the other hand, as expected, the bulk of the execution time is spent on the `gammavariate` and `gauss` methods.
 These methods, however, are provided by the Python's standard library `random`, which underneath makes heavy usage of `C` code (mainly by [usage](https://github.com/python/cpython/blob/master/Lib/random.py#L35) of the `random()` function). 
 
 For the second run of the code, I've decided to use `numpy` to sample from the Gamma and Normal distributions. The new code, `gibbs_np.py`, is provided below.
