@@ -22,14 +22,6 @@ video {
     float: none !important;
 }
 
-body {
-    font-family: 'CMS', 'Droid Sans', Helvetica, Arial, sans-serif;
-    font-size: 18px;
-    letter-spacing: -0.02rem;
-    line-height: 1.5;
-    text-align: left
-}
-
 @media only screen and (min-width: 768px) {
     body {
         text-align: justify
@@ -94,22 +86,9 @@ blockquote {
 }
 
 code {
-    font-family: "Courier", monospace;
-    font-size: 18px;
-}
-
-pre {
-    font-family: "Courier", monospace;
-    margin-left: 18px;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
-    border: none;
-    white-space: pre-wrap;
-    white-space: -moz-pre-wrap !important;
-    white-space: -pre-wrap;
-    white-space: -o-pre-wrap;
-    word-wrap: break-word
+    font-family: "Courier New", "Courier", monospace;
+    font-size: 16px;
+    font-weight: normal;
 }
 
 a:link {

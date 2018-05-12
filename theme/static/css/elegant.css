@@ -5,7 +5,7 @@ html {
     height: 100%;
     padding-top: 70px;
     font-family: 'CMS', 'Droid Sans', Helvetica, Arial, sans-serif;
-    font-size: 18px;
+    font-size: 17px;
     letter-spacing: -0.02rem;
     line-height: 1.5;
     text-align: left
@@ -125,6 +125,15 @@ pre {
     white-space: pre;
     word-break: normal;
     word-wrap: normal;
+    font-family: "Courier", monospace;
+    margin-left: 18px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    border: none;
+    white-space: -moz-pre-wrap !important;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
 }
 td.code .highlight pre {
     border-radius: 0 3px 3px 0;
@@ -268,13 +277,13 @@ article div.article-content ul:not(.articles-timeline) a:hover {
     font-size: inherit;
 }
 .page-header {
-    border-bottom: 1px solid #8f8686;
-    color: #8B0000;
+    /*border-bottom: 1px solid #8f8686;*/
+    /*color: #8B0000;*/
     margin: 10px 10px 20px;
     padding: 5px;
 }
 .page-header h1 {
-    font-size: 3em;
+    font-size: 2.5em;
     font-weight: normal;
 }
 ul.articles-timeline {
