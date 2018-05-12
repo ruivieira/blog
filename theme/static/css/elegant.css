@@ -4,6 +4,11 @@ body,
 html {
     height: 100%;
     padding-top: 70px;
+    font-family: 'CMS', 'Droid Sans', Helvetica, Arial, sans-serif;
+    font-size: 18px;
+    letter-spacing: -0.02rem;
+    line-height: 1.5;
+    text-align: left
 }
 #content-sans-footer {
     min-height: 100%;
@@ -18,7 +23,7 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: Baskerville, Garamond, Georgia, 'DejaVu Serif', 'Times New Roman', Times, Serif;
+    font-family: 'CMS', 'Droid Sans', Helvetica, Arial, sans-serif;
     font-weight: normal;
 }
 h1 small, h1 a, h1 a:hover,
@@ -39,7 +44,7 @@ hr {
 
 /* site title */
 .site-name {
-    font-family: 'Monaco', 'Inconsolata', 'Andale Mono', 'Lucida Console', 'Bitstream Vera Sans Mono', 'Courier New', Courier, Monospace;
+    font-family: 'CMS', 'Droid Sans', Helvetica, Arial, sans-serif;
 }
 /* Top navigation menu */
 .top-menu li a {
@@ -137,7 +142,7 @@ div.highlight {
 }
 /* Tags */
 .list-of-tags {
-    font-family: 'Helvetica Neue', Helvetica, Arial, Sans-Serif;
+    font-family: 'CMS', 'Droid Sans', Helvetica, Arial, sans-serif;
     list-style: none;
     margin: 0;
     overflow: hidden;
@@ -164,10 +169,10 @@ div.highlight {
     line-height: 28px;
 }
 .tag-title {
-    font-family: 'Trebuchet MS', Trebuchet, 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, Sans-Serif;
+    font-family: 'CMS', 'Droid Sans', Helvetica, Arial, sans-serif;
 }
 .articles-in-tag li {
-    font: 1.1em/1.6em 'Trebuchet MS', Trebuchet, 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, Sans-Serif;
+    font: 1.1em/1.6em 'CMS', 'Droid Sans', Helvetica, Arial, sans-serif;
 }
 /* Article */
 article p:not(#list-of-translations):not(#post-share-links) a,
@@ -185,7 +190,7 @@ article div.article-content ul:not(.articles-timeline) a:hover {
     text-shadow: none;
 }
 .article-content, div.recent-posts p {
-    font: 1.2em/1.6em 'PT Serif', Georgia, 'Times New Roman', Times, Serif;
+    font-family: 'CMS', 'Droid Sans', Helvetica, Arial, sans-serif;
     text-align: justify;
 }
 .article-content {
@@ -216,13 +221,21 @@ article div.article-content ul:not(.articles-timeline) a:hover {
     position:absolute;
 }
 .article-content blockquote {
-    font-family: 'Helvetica Neue', Helvetica, Arial, Sans-Serif;
-    font-size: inherit;
-    font-variant: normal;
-    line-height: 1.7em;
-    text-transform: none;
-    font-weight: 300;
-    position:relative;
+    /*font-family: 'Helvetica Neue', Helvetica, Arial, Sans-Serif;*/
+    /*font-size: inherit;*/
+    /*font-variant: normal;*/
+    /*line-height: 1.7em;*/
+    /*text-transform: none;*/
+    /*font-weight: 300;*/
+    /*position:relative;*/
+    background: rgb(245, 245, 245) url("../images/quoteblock.png") no-repeat left top;
+    font-family: 'CMSS';
+    margin-left: 18px;
+    font-size: 18px;
+    padding: 6px 20px 6px 54px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px
 }
 .article-content ul:not(.related-posts-list):not(.articles-timeline) {
     font-size: inherit;
@@ -397,7 +410,7 @@ a.category-link:hover {
     text-decoration: none;
 }
 a.list-of-categories {
-    font-family: 'Trebuchet MS', Trebuchet, 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, Sans-Serif;
+    font-family: 'CMS', 'Droid Sans', Helvetica, Arial, sans-serif;
     font-size: 1.1em;
 }
 a.list-of-categories:hover {
@@ -412,7 +425,7 @@ ul.list-all-articles {
 }
 ul.list-all-articles li {
     border-bottom: 1px dotted #000;
-    font-family: 'Trebuchet MS', Trebuchet, 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, Sans-Serif;
+    font-family: 'CMS', 'Droid Sans', Helvetica, Arial, sans-serif;
     font-size: 1.1em;
     padding: .3em 0;
     overflow: auto;
@@ -420,7 +433,7 @@ ul.list-all-articles li {
 ul.list-all-articles li time {
     color: #AAA;
     float: right;
-    font-family: 'PT Sans', 'Helvetica Neue', Arial, Sans-Serif;
+    font-family: 'CMS', 'Droid Sans', Helvetica, Arial, sans-serif;
     font-size: .9em;
 }
 div.blog-archives h2 {
@@ -570,14 +583,14 @@ a#allposts:hover {
     border-radius: 3px;
     border: 1px solid #e1e1e8;
     color: #d14;
-    font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+    font-family: "Courier", monospace;
     font-size: 12px;
     padding: 2px 4px;
     white-space: nowrap;
 }
 /* Helper CSS classes */
 .amp {
-    font-family: 'Warnock Pro', 'Goudy Old Style', 'Palatino', 'Book Antiqua', Serif;
+    font-family: 'CMS', 'Droid Sans', Helvetica, Arial, sans-serif;
     font-style: italic;
 }
 /* Use following classes to add floating images to your post */
