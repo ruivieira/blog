@@ -11,7 +11,7 @@ Hello!
 
 My name is Rui and I'm a Software Engineer at [Red Hat](https://www.redhat.com/en/about/company)<sup>1</sup>.
 
-I recently did a PhD student at the [School of Mathematics and Statistics](http://www.ncl.ac.uk/maths/) at the Newcastle University.
+I recently did a PhD at the [School of Mathematics and Statistics](http://www.ncl.ac.uk/maths/) at the Newcastle University.
 
 You can follow me, if you feel inclined, in other places, such as:
 
