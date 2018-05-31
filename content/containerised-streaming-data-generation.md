@@ -1,7 +1,7 @@
 Title: Containerised Streaming Data Generation using State-Space Models
 Date: 2018-05-12 19:21
 
-To prototype and test almost any application some type of input data is needed. Getting the right data can be difficult for a several reasons, including strict licenses, a considerable amount of data engineering to shape the data to our requirements and the setup of dedicated data producers. Additionally, in modern applications, we are often interested in realtime/streaming and distributed processing of data with platforms such as [Apache Kafka](https://kafka.apache.org/) and [Apache Spark](https://spark.apache.org/) and deployment in a cloud environment like [OpenShift](https://www.openshift.com/) with tools such as [oshinko](https://radanalytics.io/).
+To prototype and test almost any application some type of input data is needed. Getting the right data can be difficult for several reasons, including strict licenses, a considerable amount of data engineering to shape the data to our requirements and the setup of dedicated data producers. Additionally, in modern applications, we are often interested in realtime/streaming and distributed processing of data with platforms such as [Apache Kafka](https://kafka.apache.org/) and [Apache Spark](https://spark.apache.org/) and deployment in a cloud environment like [OpenShift](https://www.openshift.com/) with tools such as [oshinko](https://radanalytics.io/).
 
 Simulating data is not trivial, since we might want to capture complex characteristic to evaluate our algorithms in conditions similar to the real world.
 
@@ -9,7 +9,7 @@ In this post I'll introduce a tool, [timeseries-mock](https://github.com/ruiviei
 
 ## State-space models
 
-A powerful and flexible way of modelling these patterns is to use state-space models (SSM). SSMs can be divided into a model and a observation structure.
+A common way of modelling these patterns is to use state-space models (SSM). SSMs can be divided into a model and a observation structure.
 
 \begin{align}
 Y_t|\theta_t,\Phi &\sim f\left(y_t|\theta_t,\Phi_t\right) \\
@@ -116,7 +116,7 @@ $$
 $$
 
 
-In the following plots we show respectively the first and second component of the ARMA(3) state vector.
+In the following plots we show respectively the first and second component of the AR(3) state vector.
 
 ![Gibbs <>](images/ssm/arma3.png)
 
@@ -258,7 +258,7 @@ compose:
 
 ### Examples
 
-We will look at two separate examples, one that creates a stream of simulated stock prices and one that generates fake IP addresses.
+We will look at two separate examples, one that creates a stream of simulated stock prices and one that generates a fake HTTP log.
 
 We assume we want to simulate a stream of per-day stock prices for 3 different companies, each with different characteristics. In this case, we will model the following:
 
@@ -317,7 +317,7 @@ A realisation of this stream looks like the figure below.
 
 ![Gibbs <>](images/ssm/mv_continous.png)
 
-To generate fake IPs we will make the following assumptions:
+To generate the fake HTTP log we will make the following assumptions:
 
 * We will have a request type (`GET`, `POST`, `PUT`) which will vary following a random walk
 * A set of visited pages which, for illustration purposes, will be limited to (`/site/page.htm`, `/site/index.htm` and `/internal/example.htm`). We also want that the URLs visited follow a seasonal pattern.
