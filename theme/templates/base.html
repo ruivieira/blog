@@ -51,6 +51,12 @@
         {% include '_includes/feeds.html' %}
         {% endblock feed_links %}
         {% include '_includes/analytics.html' %}
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:creator" content="@ruimvieira">
+        {% if article.thumb %}
+        <meta name="twitter:image" content="{{ article.thumb }}">
+        {% endif %}
+
     </head>
     <body>
         <div id="content-sans-footer">

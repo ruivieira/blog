@@ -1,5 +1,6 @@
 Title: MCMC performance on Substrate VM
 Date: 2018-08-02 23:05
+Thumb: https://ruivieira.github.io/images/gibbs_jvm_native.png
 
 Recently I've been following (but not very closely, I admit) the development of the [GraalVM](https://www.graalvm.org/) project. The project has many interesting goals (such as [Project Metropolis](http://openjdk.java.net/projects/metropolis/), increased JIT performance and others).
 

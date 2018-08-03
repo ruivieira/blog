@@ -40,3 +40,14 @@ PLUGINS = ["render_math", "pelican_javascript", "liquid_tags.video"]
 RELATIVE_URLS = True
 
 GOOGLE_ANALYTICS = 'UA-10507665-2'
+
+#=============
+# Twitter Card
+#=============
+# https://dev.twitter.com/cards
+TWITTER_CARD_USE = (True) # (False)
+TWITTER_CARD_SITE = '@ruimvieira'  # The site's Twitter handle like @my_blog
+TWITTER_CARD_SITE_ID = ''  # The site's Twitter ID
+TWITTER_CARD_CREATOR = '@ruimvieira'  # Your twitter handle like @monkmartinez
+TWITTER_CARD_CREATOR_ID = ''  # The site creator's id
+GRAVARTAR_URL = ''
