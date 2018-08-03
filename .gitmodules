@@ -1,0 +1,3 @@
+[submodule "plugins/twitter_card"]
+	path = plugins/twitter_card
+	url = git@github.com:ruivieira/twitter_card.git

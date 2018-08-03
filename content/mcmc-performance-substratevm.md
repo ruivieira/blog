@@ -1,7 +1,7 @@
 Title: MCMC performance on Substrate VM
 Date: 2018-08-02 23:05
 
-Recently I've been following (but not very closely, I admit) the development of the [GraalVM](https://www.graalvm.org/) project. The project has many interesting goals (such as [Project Metropolis](http://openjdk.java.net/projects/metropolis/), increased JIT performance and others) but none of them are directly related to any problem I might find during my daily experience.
+Recently I've been following (but not very closely, I admit) the development of the [GraalVM](https://www.graalvm.org/) project. The project has many interesting goals (such as [Project Metropolis](http://openjdk.java.net/projects/metropolis/), increased JIT performance and others).
 
 However, having dabbled with projects such as [Scala native](https://github.com/scala-native/scala-native) and [Kotlin native](https://kotlinlang.org/docs/reference/native-overview.html), one of the aspects of GraalVM that caught my attention was the [SubstrateVM](https://github.com/oracle/graal/tree/master/substratevm), which allegedly allows for a simple, straight-forward compilation of any Java bytecode into a native binary.
 I specifically wanted to compare the performance and memory consumption of simple scientific computing tasks when using the JVM and native executables.
