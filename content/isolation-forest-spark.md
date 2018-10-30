@@ -1,6 +1,6 @@
 Title: Introduction to Isolation Forests
 Date: 2018-08-03 23:05
-Thumb: https://ruivieira.github.io/images/gibbs_jvm_native.png
+Thumb: https://ruivieira.github.io/images/isolationforests/bst_steps.png
 
 *Isolation Forests* (IFs), presented in Liu *et. al* (2012), are a popular algorithm used for outlier classification. In a very simplified way, the method consists of building an ensemble of
 *Isolation Trees* (ITs) for a given data set and observations are deemed anomalies if they have short adjusted average path lengths on the ITs.
