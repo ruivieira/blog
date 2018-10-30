@@ -53,7 +53,7 @@
         {% include '_includes/analytics.html' %}
         <meta name="twitter:card" content="summary">
         <meta name="twitter:creator" content="@ruimvieira">
-        {% if article.thumb %}
+        {% if article and article.thumb %}
         <meta name="twitter:image" content="{{ article.thumb }}">
         {% endif %}
 
