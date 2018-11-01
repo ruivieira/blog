@@ -1,27 +1,26 @@
 Title: Introduction to Isolation Forests
-Date: 2018-08-03 23:05
+Date: 2018-10-30 21:05
 Thumb: https://ruivieira.github.io/images/isolationforests/bst_steps.png
 
 *Isolation Forests* (IFs), presented in Liu *et. al* (2012), are a popular algorithm used for outlier classification. In a very simplified way, the method consists of building an ensemble of
 *Isolation Trees* (ITs) for a given data set and observations are deemed anomalies if they have short adjusted average path lengths on the ITs.
 
-ITs, which will be covered shortly, have several properties in common with a fundamental data structure: the [Binary Search Tree](https://en.wikipedia.org/wiki/Binary_search_tree) (BSTs). In a very simplified way, BSTs are a special instance of tree structures where keys are kept in such an order that a node search is performed by iteratively (or recursively) choosing a left or right branch based on a quantitative comparison (*e.g.* lesser or greater). Node insertion is performed by doing a tree search, using the method described previously, until reaching an _external node_, where the new node will be inserted. This allows for efficient node searches, since, on average, half the tree will not be visited. To illustrate this, assume the values $x=[1, 10, 2, 4, 3, 5, 26, 9, 7, 54]$ and the respective insertion on a BST. The intermediate steps would then be as shown below.
+ITs, which will be covered shortly, have several properties in common with a fundamental data structure: the [Binary Search Tree](https://en.wikipedia.org/wiki/Binary_search_tree) (BSTs). In a very simplified way, BSTs are a special instance of tree structures where keys are kept in such an order that a node search is performed by iteratively (or recursively) choosing a left or right branch based on a quantitative comparison (*e.g.* lesser or greater). Node insertion is performed by doing a tree search, using the method described previously, until reaching an _external node_, where the new node will be inserted. This allows for efficient node searches since, on average, half the tree will not be visited. To illustrate this assume the values $x=[1, 10, 2, 4, 3, 5, 26, 9, 7, 54]$ and the respective insertion on a BST. The intermediate steps would then be as shown below.
 
 ![](images/isolationforests/bst_steps.png)
 
-One of the properties of BSTs is that, with randomly generated data, the path between the root node and an outliers will typically be shorter. We can see from the illustration below that, with our example data, the path length for (say) 7 is twice the length than for the suspicious value of 54. This property will play an important role in the IF algorithm, as we will see further on.
+One of the properties of BSTs is that, with randomly generated data, the path between the root node and the outliers will typically be shorter. We can see from the illustration below that, with our example data, the path length for (say) 7 is twice the length than for the suspicious value of 54. This property will play an important role in the IF algorithm, as we will see further on.
 
 ![](images/isolationforests/bst_path_length.png)
 
 ## Isolation Trees
 
-Since ITs are the fundamental component of IFs, we will start by describing their building process. We start by defining $t$ as the number of trees in the IF, $\mathcal{D}$ as the training data (contained in a $n$-dimensional feature space, $\mathcal{D} \subset \mathbb{R}^n$) and $\psi$ as the subsampling size. The building of a IT consists then in recursively partitioning the data $\mathcal{D}$ by sampling (without replacement) a subsample $\mathcal{D}^{\prime}$ of size $\psi$. We then build an isolation tree $\mathcal{T}^{\prime}$ with this subsample (in order to later add it to the isolation forest $\mathcal{F}$). This process is repeated $t$ times.
+Since ITs are the fundamental component of IFs, we will start by describing their building process. We start by defining $t$ as the number of trees in the IF, $\mathcal{D}$ as the training data (contained in an $n$-dimensional feature space, $\mathcal{D} \subset \mathbb{R}^n$) and $\psi$ as the subsampling size. The building of a IT consists then in recursively partitioning the data $\mathcal{D}$ by sampling (without replacement) a subsample $\mathcal{D}^{\prime}$ of size $\psi$. We then build an isolation tree $\mathcal{T}^{\prime}$ with this subsample (in order to later add it to the isolation forest $\mathcal{F}$) and the process is repeated $t$ times.
 
-To build an isolation tree $\mathcal{T}^{\prime}$ from the subsample we proceed as follows: if the data subsample $\mathcal{D}^{\prime}$ is indivisible, a tree is returned contained a single _external node_ corresponding to the feature dimensions, that is, $n$. 
-If it can be divided, a series of steps must be performed. Namely, if we consider $Q = \lbrace q_1,\dots,q_n\rbrace$ as the list of features in $\mathcal{D}^{\prime}$, we select a random feature $q \in \mathcal{D}^{\prime}$ and a random _split point_ $p$ such that
+To build an isolation tree $\mathcal{T}^{\prime}$ from the subsample we proceed as follows: if the data subsample $\mathcal{D}^{\prime}$ is indivisible, a tree is returned containing a single _external node_ corresponding to the feature dimensions, $n$.  If it can be divided, a series of steps must be performed. Namely, if we consider $Q = \lbrace q_1,\dots,q_n\rbrace$ as the list of features in $\mathcal{D}^{\prime}$, we select a random feature $q \in Q$ and a random _split point_ $p$ such that
 $$
 \min(q) < p < \max(q), \qquad q \in Q.
-$$ 
+$$
 Based on the cut-off point $p$, we filter the features into a BST's left and right nodes according to
 $$
 \mathcal{D}_l := \lbrace \mathcal{D}^{\prime} : q \in Q,  q<p\rbrace \\
@@ -29,11 +28,10 @@ $$
 $$
 and return an _internal node_ having an isolation tree with left and right nodes as respectively $\mathcal{D}_l$ and $\mathcal{D}_r$.
 
-To illustrate this (and the general method of identifying anomalies in a two dimensional feature space, $x\in\mathbb{R}^2$) we will look at some simulated data and its processing. 
-We start by simulating two clusters of data from a multivariate normal distribution, one centred in $x_a=[-10, 10]$ and another centred in $x_b=[10, 10]$, with a variance of $\Sigma=\text{diag}(2, 2)$, that is
+To illustrate this (and the general method of identifying anomalies in a two dimensional feature space, $x\in\mathbb{R}^2$) we will look at some simulated data and its processing. We start by simulating two clusters of data from a multivariate normal distribution, one centred in $x_a=[-10, 10]$ and another centred in $x_b=[10, 10]$, with a variance of $\Sigma=\text{diag}(2, 2)$, that is
 $$
 X_a \sim \mathcal{N}\left([-10, -10], \text{diag}(2, 2)\right) \\
-X_b \sim \mathcal{N}\left([10, 10], \text{diag}(2, 2)\right)
+X_b \sim \mathcal{N}\left([10, 10], \text{diag}(2, 2)\right).
 $$
 The particular realisation of this simulation looks like this:
 
@@ -44,6 +42,8 @@ Below we illustrate the building of a _single_ IT (given the data), illustrating
 {% video {filename}/images/isolationforests/split.mp4 %}
 
 In order to perform anomaly detection (*e.g.* observation scoring) we will then use the IT equivalent of the BST unsuccessful search heuristics. An external node termination in an IT is equivalent to a BST unsuccessful search. Given an observation $x$, our goal is then to calculate the score for this observation, given our defined subsampling size, that is, $s(x,\psi)$.
+
+This technique amounts to partitioning the feature space randomly until feature points are "isolated". Intuitively, points in high density regions will need more partitioning steps, whereas anomalies (by definition away from high density regions) will need fewer splits. Since the building of the ITs is performed in a randomised fashion and using a subsample of the data, this density predictor can be average over a number of ITs, the _Isolation Forest_.
 
 Intuitively, this could be done by calculating the average path length for our $\mathcal{T}_n, n=1,\dots,t$ ITs, $\overline{h}(x)$. However, as pointed in Liu _et. al_ (2012), a problem with calculating this is that maximum possible height of each $\mathcal{T}_n$ grows as $\mathcal{O}(\log(\psi))$. To compare $h(x)$ given different subsampling sizes, a normalisation factor, $c(\psi)$ must be established. This can be calculated by
 
@@ -95,6 +95,7 @@ The above steps fully define a naive isolation forest algorithm, which when appl
 
 ![](images/isolationforests/detection.png)
 
+Thanks for reading! If you have any questions or comments, please let me know on [Mastodon](https://mastodon.social/@ruivieira) or [Twitter](https://twitter.com/ruimvieira).
 
 ---
 ## References
