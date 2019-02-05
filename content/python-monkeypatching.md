@@ -190,6 +190,89 @@ c._Class__newPrivate() # prints "New private bound"
 c.callNewPrivate() # prints "New private bound"
 ```
 
+## Builtins
+
+Is it possible to monkey patch builtin classes in Python, _e.g._ `int` or `float`?
+In short, yes, it is.
+
+Although the usefulness is arguable and I _strongly_ urge not to do this in any production scenario, we'll look at how to achieve this, for the sake of completeness. A very interesting and educational read is available from the [Forbidden Fruit](https://github.com/clarete/forbiddenfruit) Python module.
+
+Primitive (or _builtin_) classes in Python are typically written in C and as such some of these meta-programming facilities require jumping through extra hoops (as well as being a Very Bad Idea™).
+
+Let's first look at the integer class representation, `int`.
+
+A `int` doesn't allow bound methods to be added dynamically as previously. For instance:
+
+```python
+p = 5
+
+type(p) # int
+```
+
+We can try to add a method to `int` to square the value of the instance:
+
+```python
+int.square = lambda self: self ** 2
+```
+
+This fails with the error `TypeError: can't set attributes of built-in/extension type 'int'`.
+
+The solution (as presented in Forbidden Fruit) is to first create classes to hold the `ctype` information of a builtin (C) class. We subclass `ctypes` Python representation of a C `struct` in native byte order and hold the `signed int` size and pointer to `PyObject`.
+
+```python
+import ctypes
+
+class PyObject(ctypes.Structure):
+    pass
+    
+PyObject._fields_ = [
+    ('ob_refcnt', ctypes.c_int),
+    ('ob_type', ctypes.POINTER(PyObject)),
+]
+```
+
+Next we create a holder for Python objects slots, containing a reference to the `ctype` structure:
+
+```python
+class SlotsProxy(PyObject):
+    _fields_ = [('dict', ctypes.POINTER(PyObject))]
+```
+
+The final step is extract the `PyProxyDict` from the object referenced by the pointer.
+Ideally, we should get the builtin's namespace so we can freely set attributes as we did previously. A helper function to retrieve the builtins (mutable) namespace can then be:
+
+```python
+def patch(klass):
+    name = klass.__name__
+    target = klass.__dict__
+
+    proxy_dict = SlotsProxy.from_address(id(target))
+    namespace = {}
+
+    ctypes.pythonapi.PyDict_SetItem(
+        ctypes.py_object(namespace),
+        ctypes.py_object(name),
+        proxy_dict.dict,
+    )
+    return namespace[name]
+```
+
+We can now easily patch builtin classes. Let's try to add the square method again by first retrieving the namespace (stored below in `d`) and setting it directly
+
+```python
+d = patch(int)
+
+d["square"] = lambda self: self ** 2
+
+p.square() # 25
+```
+
+All future instance of `int` will also contain the square method now:
+
+```python
+(2 + p).square() # 49
+```
+
 ## Conclusion
 
 “Monkey patching” is usually, and rightly so, considered a code smell, due to the increased indirection and potential source of unwanted surprises.
