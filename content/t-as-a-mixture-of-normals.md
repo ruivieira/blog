@@ -1,6 +1,7 @@
 Title: t as mixture of Normals
 Date: 2016-11-27 14:00
 Category: statistics, code
+Tags: statistics
 
 (Based on Rasmus Bååth's [post](http://www.sumsar.net/blog/2013/12/t-as-a-mixture-of-normals/))
 
