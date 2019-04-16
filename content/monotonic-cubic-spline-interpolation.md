@@ -1,4 +1,4 @@
-Title: Monotonic Cubic Spline interpolation in Rust
+Title: Monotonic Cubic Spline interpolation (with some Rust)
 Date: 2019-04-03 17:09
 Category: code
 Tags: code, rust, math
@@ -7,7 +7,7 @@ Monotonic Cubic Spline interpolation (MCSI) is a popular and useful method which
 In this post I’ll show how to implement the method developed by F. N. Fritsch and R. E. Carlson [[Fritsch2005](#ref-1)<a name="ref-1-origin"></a>] in the [Rust](https://www.rust-lang.org/) programming language.
 
 ## Rust
-While this post does not intend to be an introduction to the Rust language, the concept implementation will be done in this language and some of the fundamentals of Rust will be presented as we go along.
+_Why_ Rust? Definitely this is a type of solution so simple that it can be implemented in  pratically any programming language we can think of. However, I do find that the best way to get acquainted with a new language and it's concepts is precisely to try to implement a simple and well-know solution. Although this post does not intend to be an introduction to the Rust language, some of the fundamentals will be presented as we go along.
 
 Idiomatic Rust Object-Oriented Programming (OOP) has several characteristics which differ significantly from “traditional” OOP languages.
 Rust achieves data and behaviour encapsulation by mean of defining data structure blueprints (called `struct`) and then defining their behaviour though a concrete implementation (through `impl`). As an example, a simple “class” `Foo` would consist of:
@@ -53,7 +53,7 @@ impl MonotonicCubicSpline {
      // ...
   }
 
-	fn curry(x: Vec<f64>, y: Vec<f64>) -> impl Fn(f64) -> f64 {
+	fn partial(x: Vec<f64>, y: Vec<f64>) -> impl Fn(f64) -> f64 {
      // ...
   }
 }
@@ -228,6 +228,8 @@ let point = g(0.39);
 ```
 
 ![interpolation](images/splines/interpolation.png)
+
+The full code can be found [here](https://gitlab.com/ruivieira/mentat/blob/master/src/lib.rs).
 
 ## References
 <a name="ref-1">[Fritsch2005]</a> Fritsch, F. N., & Carlson, R. E. (2005). Monotone Piecewise Cubic Interpolation. _SIAM Journal on Numerical Analysis_. https://doi.org/10.1137/0717021 [🔝](#ref-1-origin)
