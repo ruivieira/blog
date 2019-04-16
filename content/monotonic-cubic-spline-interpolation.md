@@ -2,6 +2,7 @@ Title: Monotonic Cubic Spline interpolation (with some Rust)
 Date: 2019-04-03 17:09
 Category: code
 Tags: code, rust, math
+Thumb: https://ruivieira.github.io/images/splines/interpolation.png
 
 Monotonic Cubic Spline interpolation (MCSI) is a popular and useful method which allows to fit a smooth continuous function through discrete data. MCSI has several applications in the field of computer vision and trajectory fitting. MCSI further guarantees monotonicity of the smoothed approximation, something which a cubic spline approximation alone cannot.
 In this post I’ll show how to implement the method developed by F. N. Fritsch and R. E. Carlson [[Fritsch2005](#ref-1)<a name="ref-1-origin"></a>] in the [Rust](https://www.rust-lang.org/) programming language.
