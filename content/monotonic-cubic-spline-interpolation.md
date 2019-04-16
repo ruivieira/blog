@@ -4,14 +4,14 @@ Category: code
 Tags: code, rust, math
 Thumb: https://ruivieira.github.io/images/splines/interpolation.png
 
-Monotonic Cubic Spline interpolation (MCSI) is a popular and useful method which allows to fit a smooth continuous function through discrete data. MCSI has several applications in the field of computer vision and trajectory fitting. MCSI further guarantees monotonicity of the smoothed approximation, something which a cubic spline approximation alone cannot.
+Monotonic Cubic Spline interpolation (MCSI) is a popular and useful method which fits a smooth, continuous function through discrete data. MCSI has several applications in the field of computer vision and trajectory fitting. MCSI further guarantees monotonicity of the smoothed approximation, something which a cubic spline approximation alone cannot.
 In this post I’ll show how to implement the method developed by F. N. Fritsch and R. E. Carlson [[Fritsch2005](#ref-1)<a name="ref-1-origin"></a>] in the [Rust](https://www.rust-lang.org/) programming language.
 
 ## Rust
-_Why_ Rust? Definitely this is a type of solution so simple that it can be implemented in  pratically any programming language we can think of. However, I do find that the best way to get acquainted with a new language and it's concepts is precisely to try to implement a simple and well-know solution. Although this post does not intend to be an introduction to the Rust language, some of the fundamentals will be presented as we go along.
+_Why_ Rust? Definitely this is a type of solution so simple that it can be implemented in  pratically any programming language we can think of. However, I do find that the best way to get acquainted with a new language and its concepts is precisely to try to implement a simple and well-know solution. Although this post does not intend to be an introduction to the Rust language, some of the fundamentals will be presented as we go along.
 
 Idiomatic Rust Object-Oriented Programming (OOP) has several characteristics which differ significantly from “traditional” OOP languages.
-Rust achieves data and behaviour encapsulation by mean of defining data structure blueprints (called `struct`) and then defining their behaviour though a concrete implementation (through `impl`). As an example, a simple “class” `Foo` would consist of:
+Rust achieves data and behaviour encapsulation by means of defining data structure blueprints (called `struct`) and then defining their behaviour though a concrete implementation (through `impl`). As an example, a simple “class” `Foo` would consist of:
 
 ```rust
 struct Foo {
