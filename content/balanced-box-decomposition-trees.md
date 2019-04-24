@@ -26,7 +26,7 @@ where $p$ is the _approximate_ NN and $p^{\star}$ is the _true_ NN. Let's consid
 
 ## Space decomposition
 
-BBD trees belong to the category of hierarchical space decomposition trees. In BBD trees, specifically, space is divided in $d$-dimensional rectangles and _cells_. Cells can either represent another $d$-dimensional rectangle or the intersection of two rectangles (one, the _outer box_ fully enclosing the other, the _inner box_). Another important distinction of BBD trees is that rectangle's _size_ (in this context, the largest lenght of the $d^{th}$ dimension) is bounded by a constant value.
+BBD trees belong to the category of hierarchical space decomposition trees. In BBD trees, specifically, space is divided in $d$-dimensional rectangles and _cells_. Cells can either represent another $d$-dimensional rectangle or the intersection of two rectangles (one, the _outer box_ fully enclosing the other, the _inner box_). Another important distinction of BBD trees is that rectangle's _size_ (in this context, the largest length of the $d^{th}$ dimension) is bounded by a constant value.
 The space decomposition must follow an additional rule which is boxes must be _sticky_. If we consider a inner box $[x_{inner}, y_{inner}]$ contained in a outer box $[x_{outer}, y_{outer}]$, such that
 
 $$[x_{inner}, y_{inner}] \subseteq [x_{outer}, y_{outer}],$$
@@ -47,7 +47,7 @@ An illustration of the _stickiness_ concept can viewed in the diagram below.
 
 Stickiness provides some important geometric properties to the space decomposition which will be discussed further on. The actual process of space decomposition will produce a tree of nodes, each with an associated $d$-dimensional rectangle enclosing a set of points. Each node will be further decomposed into children nodes, containing a region of space with a subset of the parent's data points. If a node has no children it will be called a _leaf_ node. The division process can occur either by means of either
 
-* a _fair split_, this is done by partitioning the space with an hyperplance, resulting in a _low_ and _high_ children nodes
+* a _fair split_, this is done by partitioning the space with an hyperplane, resulting in a _low_ and _high_ children nodes
 * a _shrink_, splitting the box into a inner box (the _inner_ child) and a outer box (the _outer_ child).
 
 <figure>
@@ -120,7 +120,7 @@ An important property of BBD-trees is that the tree structure does not need to b
 
 ## Filtering and _k_-NN
 
-Great. Now that you solved the USS Euler's problem, you want to make a suggestion to the federation. Where to place several starbases and divide the system's coverage between them. An immediate generalisation of this method is easily applicable to the problem of _clustering_. Note that, at the moment, we are not concerned with determining the "best" clusters for our data<sup>2</sup>. Given a set of points $Z = \{z_1, z_2, \dots, z_n\}$, we are concerned now in partitioning the data in clusters centered in each of the $Z$ points. A way of looking at this, is that we are building, for each point $z_n$ a Voronoi cell $V(z_n)$. This is achieved by a method called _filtering_. Filtering, in general terms, works by walking the tree with the list of _candidate centers_ ($Z$) and pruning points from the candidate list as we move down. We will denote an arbitrary node as $n$, $z^{\star}_w$ and $n_w$ respectively as the candidate and the node weight, $z^{\star}_n$ and $n_n$ as the candidate and node count. The algorithm steps, as detailed in [[Kanungo2002](#ref-2)<a name="ref-2-origin"></a>], are detailed below:
+Great. Now that you solved the USS Euler's problem, you want to make a suggestion to the federation. Where to place several star-bases and divide the system's coverage between them. An immediate generalisation of this method is easily applicable to the problem of _clustering_. Note that, at the moment, we are not concerned with determining the "best" clusters for our data<sup>2</sup>. Given a set of points $Z = \{z_1, z_2, \dots, z_n\}$, we are concerned now in partitioning the data in clusters centred in each of the $Z$ points. A way of looking at this, is that we are building, for each point $z_n$ a Voronoi cell $V(z_n)$. This is achieved by a method called _filtering_. Filtering, in general terms, works by walking the tree with the list of _candidate centres_ ($Z$) and pruning points from the candidate list as we move down. We will denote an arbitrary node as $n$, $z^{\star}_w$ and $n_w$ respectively as the candidate and the node weight, $z^{\star}_n$ and $n_n$ as the candidate and node count. The algorithm steps, as detailed in [[Kanungo2002](#ref-2)<a name="ref-2-origin"></a>], are detailed below:
 
 
 
@@ -141,14 +141,14 @@ $\qquad\qquad$} **else** {<br>$\qquad\qquad\qquad$Filter($n_{left}, Z$)<br>
 $\qquad\qquad\qquad$Filter($n_{right}, Z$)<br>$\qquad\qquad$}<br>
 }<br>
 
-To illustrate the assignement of data points to the centers, we will consider the previous bivariate Gaussian data along with two centers, $z_1 = \{0,0\}$ and $z_2 = \{3, 3\}$. Figure 11 shows the process of splitting the dataset $\mathcal{D}$ into two clusters, namely the subsets of data points closer to $z_1$ or $z_2$.
+To illustrate the assignment of data points to the centres, we will consider the previous bivariate Gaussian data along with two centres, $z_1 = \{0,0\}$ and $z_2 = \{3, 3\}$. Figure 11 shows the process of splitting the dataset $\mathcal{D}$ into two clusters, namely the subsets of data points closer to $z_1$ or $z_2$.
 
 <figure>
   <img src="images/bbdtrees/gaussian_filtering.gif">
   <figcaption>Figure 11. Assignment of points in \(\mathcal{D}\) to \(Z\). Data points coloured according to the assigned center. Lines represent the distance from the cells midpoint to \(Z\).</figcaption>
 </figure>
 
-We can see in Figure 12 the final cluster assignment of the datapoints. With a $\mathbb{R}^2$ dataset and only two centers, the organisation of points follows a simple perpendicular bissection of the segment connecting the centers, as expected.
+We can see in Figure 12 the final cluster assignment of the data points. With a $\mathbb{R}^2$ dataset and only two centres the organisation of points follows a simple perpendicular bisection of the segment connecting the centres, as expected.
 
 <figure>
 	<img src="images/bbdtrees/gaussian_filtering_clusters.png">
