@@ -2,7 +2,7 @@ Title: Introduction to Balanced Box-Decomposition Trees
 Date: 2019-04-17 19:11
 Category: code
 Tags: code, crystal, math, machine learning
-Thumb: https://ruivieira.github.io/images/splines/interpolation.png
+Thumb: https://ruivieira.github.io/images/bbdtrees/gaussian_filtering_clusters.png
 
 Stardate 96893.29. You are the USS Euler's Science Officer at a moment where the computer graphical displays and voice systems went down. You only have enough deuterium for a short travel and need to find the nearest star system. This is not a simple matter of looking at a chart. You have multiple dimensions in which you can travel. In a bid for galactic peace, the Federation mandated that _both_ Emacs and Vim should be installed in all computers. You open your favourite editor and, fortunately, know exactly how to formulate the solution to your problem: a $d$-dimensional nearest neighbour algorithm.
 
