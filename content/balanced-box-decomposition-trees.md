@@ -6,11 +6,11 @@ Thumb: https://ruivieira.github.io/images/bbdtrees/gaussian_filtering_clusters.p
 
 Stardate 96893.29. You are the USS Euler's Science Officer at a moment when the computer graphical displays and voice systems went down. You only have enough deuterium for a short travel and need to find the nearest star system. This is not a simple matter of looking at a chart. You have multiple dimensions in which you can travel. In a bid for galactic peace, the Federation mandated that _both_ Emacs and Vim should be installed in all computers. You open your favourite editor and, fortunately, know exactly how to formulate the solution to your problem: a $d$-dimensional nearest neighbour algorithm.
 
-Given a dataset $\mathcal{D}$ of $n$ points in a space $X$ we want to be able to tell which are the _closest_ point to a query point $q \in X$, preferably in a way which is computationally cheaper than _brute force_ methods (_e.g._ iterating through all of the points) which typically solve this problem in $\mathcal{O}(dn)$ [[Arya1998](#ref-1)<a name="ref-1-origin"></a>]. $X$ could have $d$ dimensions (that is $\mathcal{D} \subset X : \mathbb{R}^d$) and we define _closest_ using<sup>1</sup> Minkowski distance metrics, that is:
+Given a dataset $\mathcal{D}$ of $n$ points in a space $X$ we want to be able to tell which is the _closest_ point to a query point $q \in X$, preferably in a way which is computationally cheaper than _brute force_ methods (_e.g._ iterating through all of the points) that typically solve this problem in $\mathcal{O}(dn)$ [[Arya1998](#ref-1)<a name="ref-1-origin"></a>]. $X$ could have $d$ dimensions (that is $\mathcal{D} \subset X : \mathbb{R}^d$) and we define _closest_ using<sup>1</sup> Minkowski distance metrics, that is:
 
 $$L_m = \left(\sum_{i=1}^d |p_i - q_i|^m\right)^{\frac{1}{m}},\qquad p,q \in X : \mathbb{R}^d.$$
 
-A potential solution for this problem would be to use _kd_-trees, which for low dimenson scenarios provide $\mathcal{O}(\log n)$ query times [[Friedman1977](#ref-2)<a name="ref-2-origin"></a>]. However, as the number of dimensions increase (as quickly as $d>2$) the query times also increase as $2^d$.
+A potential solution for this problem would be to use _kd_-trees, which for low dimension scenarios provide $\mathcal{O}(\log n)$ query times [[Friedman1977](#ref-2)<a name="ref-2-origin"></a>]. However, as the number of dimensions increase (as quickly as $d>2$) the query times also increase as $2^d$.
 
 The case can be made then for _approximate_ nearest neighbour (NN) algorithms and that's precisely what we will discuss here, namely the _Balanced Box-Decomposition Tree_ (BBD, [[Arya1998](#ref-1)<a name="ref-1-origin"></a>]). The definition of _approximate_ NN for a query point $q$ can be given as
 
@@ -28,7 +28,7 @@ where $p$ is the _approximate_ NN and $p^{\star}$ is the _true_ NN. Let's consid
 ## Space decomposition
 
 BBD trees belong to the category of hierarchical space decomposition trees. In BBD trees, specifically, space is divided in $d$-dimensional rectangles and _cells_. Cells can either represent another $d$-dimensional rectangle or the intersection of two rectangles (one, the _outer box_ fully enclosing the other, the _inner box_). Another important distinction of BBD trees is that rectangle's _size_ (in this context, the largest length in all of the $d$ dimensions) is bounded by a constant value.
-The space decomposition must follow an additional rule which is boxes must be _sticky_. If we consider a inner box $[x_{inner}, y_{inner}]$ contained in a outer box $[x_{outer}, y_{outer}]$, such that
+The space decomposition must follow an additional rule which is boxes must be _sticky_. If we consider an inner box $[x_{inner}, y_{inner}]$ contained in an outer box $[x_{outer}, y_{outer}]$, such that
 
 $$[x_{inner}, y_{inner}] \subseteq [x_{outer}, y_{outer}],$$
 
@@ -50,7 +50,7 @@ An illustration of the _stickiness_ concept can viewed in the diagram below.
 Stickiness provides some important geometric properties to the space decomposition which will be discussed further on. The actual process of space decomposition will produce a tree of nodes, each with an associated $d$-dimensional rectangle enclosing a set of points. Each node will be further decomposed into children nodes, containing a region of space with a subset of the parent's data points. If a node has no children it will be called a _leaf_ node. The division process can occur either by means of:
 
 * a _fair split_, this is done by partitioning the space with an hyperplane, resulting in a _low_ and _high_ children nodes
-* a _shrink_, splitting the box into a inner box (the _inner_ child) and a outer box (the _outer_ child).
+* a _shrink_, splitting the box into an inner box (the _inner_ child) and an outer box (the _outer_ child).
 
 <figure>
 <img src="images/bbdtrees/split.png">
@@ -59,7 +59,7 @@ Stickiness provides some important geometric properties to the space decompositi
 
 
 
-The initial node of the tree, the _root node_, will include all the dataset points,  $\mathcal{D}$. In the Figure 4 we can see a representation of the root node for the dataset presented above. We can see the node boundaries in dashed red lines as well as the node's center, marked as $\mu_{root}$.
+The initial node of the tree, the _root node_, will include all the dataset points,  $\mathcal{D}$. In Figure 4 we can see a representation of the root node for the dataset presented above. We can see the node boundaries in dashed red lines as well as the node's center, marked as $\mu_{root}$.
 
 <figure>
 <img src="images/bbdtrees/root_node.png">
@@ -98,7 +98,7 @@ With this larger dataset, we have enough points to illustrate the tree node buil
 </figure>
 
 
-This division process illustrates an important property of BBD-trees. Although other space decomposition algorithms (such as _kd_-trees) display a geometric reduction of number of points enclosed in each _cell_, methods such as the BBD-tree, which impose constraints on the cell's size aspect ratio as stated before, display not only a geometric reduction in the number of points, but also in the cell's size as well. The construction cost of a BBD-tree is $\mathcal{O}(dn \log n)$ and the tree itself will have $\mathcal{O}(n)$ nodes and $\mathcal{O}(\log n)$ height.
+This division process illustrates an important property of BBD-trees. Although other space decomposition algorithms (such as _kd_-trees) display a geometric reduction in the number of points enclosed in each _cell_, methods such as the BBD-tree, which impose constraints on the cell's size aspect ratio as stated before, display not only a geometric reduction in the number of points, but also in the cell's size as well. The construction cost of a BBD-tree is $\mathcal{O}(dn \log n)$ and the tree itself will have $\mathcal{O}(n)$ nodes and $\mathcal{O}(\log n)$ height.
 
 ## Tree querying
 
@@ -130,7 +130,7 @@ An important property of BBD-trees is that the tree structure does not need to b
 
 ## Filtering and _k_-NN
 
-Great. Now that you solved the USS Euler's problem, you want to make a suggestion to the federation. Where to place several star-bases and how to divide the system's coverage between them. An immediate generalisation of this method is easily applicable to the problem of _clustering_. Note that, at the moment, we are not concerned with determining the "best" clusters for our data<sup>2</sup>. Given a set of points $Z = \{z_1, z_2, \dots, z_n\}$, we are concerned now in partitioning the data in clusters centred in each of the $Z$ points. A way of looking at this, is that we are building, for each point $z_n$ a Voronoi cell $V(z_n)$. This is achieved by a method called _filtering_. Filtering, in general terms, works by walking the tree with the list of _candidate centres_ ($Z$) and pruning points from the candidate list as we move down. We will denote an arbitrary node as $n$, $z^{\star}_w$ and $n_w$ respectively as the candidate and the node weight, $z^{\star}_n$ and $n_n$ as the candidate and node count. The algorithm steps, as detailed in [[Kanungo2002](#ref-3)<a name="ref-3-origin"></a>], are detailed below:
+Great. Now that you solved the USS Euler's problem, you want to make a suggestion to the federation. Where to place several star-bases and how to divide the system's coverage between them. An immediate generalisation of this method is easily applicable to the problem of _clustering_. Note that, at the moment, we are not concerned with determining the "best" clusters for our data<sup>2</sup>. Given a set of points $Z = \{z_1, z_2, \dots, z_n\}$, we are concerned now in partitioning the data in clusters centred in each of the $Z$ points. A way of looking at this, is that we are building, for each point $z_n$ a Voronoi cell $V(z_n)$. This is achieved by a method called _filtering_. Filtering, in general terms, works by walking the tree with the list of _candidate centres_ ($Z$) and pruning points from the candidate list as we move down. We will denote an arbitrary node as $n$, $z^{\star}_w$ and $n_w$ respectively as the candidate and the node weight, $z^{\star}_n$ and $n_n$ as the candidate and node count. The algorithm steps, as detailed in [[Kanungo2002](#ref-3)<a name="ref-3-origin"></a>], are presented below:
 
 
 
